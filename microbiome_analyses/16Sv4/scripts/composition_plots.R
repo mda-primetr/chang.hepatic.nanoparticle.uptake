@@ -2,16 +2,7 @@
 library(dplyr)
 library(phyloseq)
 library(microViz)
-physeq <- readRDS("data/physeq_rarefied.RDS") %>%
-  microViz::ps_mutate(treat = factor(treat, 
-                           levels = c("Untreated", 
-                                      "Colistin", 
-                                      "Gentamycin", 
-                                      "Kanamycin", 
-                                      "Metronidazole", 
-                                      "Vancomycin", 
-                                      "All"))
-  )
+physeq <- readRDS("data/physeq_rarefied.RDS") 
 
 # Create composition plot
 library(ggplot2)
