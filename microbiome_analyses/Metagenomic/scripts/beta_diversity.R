@@ -46,6 +46,9 @@ adonis_annot <- paste("Adonis2 test: treatment * timepoint R2 =", formatC(adonis
 
 
 #PCOA plots ----
+
+# Set colorblind friendly palette
+treat_pal <-   c( '#737373', '#EE6677',  '#4477AA', '#AA3377')
 ##  Create plot with ellipses ----
 pcoa_ellipse <- pcoa_df%>%
   ggplot(aes(axis_1, axis_2, color = treatment, shape = timepoint, fill = treatment, group = timepoint)) +
