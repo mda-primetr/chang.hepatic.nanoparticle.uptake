@@ -23,10 +23,10 @@ Each folder corresponds to different subsets of the microbiome analyses:
 - **Metabolome**: Contains data and analysis scripts for the metagenomic microbiome data.
 
 ## File Descriptions
-Each folder contains:
+Each folder may contain:
 - **data/**: phyloseq objects
 - **scripts/**: R scripts for processing microbiome data, including computing diversity metrics, and visualizing taxa composition.
-- **src/**: R scripts for custom functions used in the scripts, if any
+- **src/**: R scripts for custom functions used in the scripts, if any.
 - **Rproj files**: R project files for organization and reproducibility.
 
 ## Usage
