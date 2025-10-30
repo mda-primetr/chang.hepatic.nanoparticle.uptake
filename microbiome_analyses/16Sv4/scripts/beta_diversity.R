@@ -75,8 +75,8 @@ pcoa_plot <- pcoa_df%>%
          fill = guide_legend(title = "Treatment")) +
   annotate(label = adonis_annot, geom = "text", y = 0.6, x = 0, size = 4)
 
-
-
+# View plot
+pcoa_plot
 
 
 
@@ -151,4 +151,5 @@ dist_plot <- dist_df %>%
   annotate(geom = "text", label = dist_annot, x = 4, y = 0.9, size = 4.5)
 
 
-
+# View plot
+dist_plot

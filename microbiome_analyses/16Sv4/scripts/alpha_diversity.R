@@ -102,3 +102,7 @@ shan_plot <- plot_alpha(df = alpha, response = "Shannon", x_axis = "treat",
 # Combine the three plots into final figure
 library(ggpubr)
 alpha_combined_plot <- ggarrange(rich_plot, simp_plot, shan_plot, nrow = 1)
+
+
+# View plot
+alpha_combined_plot

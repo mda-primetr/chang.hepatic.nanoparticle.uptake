@@ -20,6 +20,7 @@ top_taxa_plot <- physeq%>%
   facet_wrap(~treat, ncol = 1, scales = "free_y")
 
 
-
+# View plot
+top_taxa_plot
 
 
