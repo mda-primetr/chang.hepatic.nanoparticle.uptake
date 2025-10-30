@@ -73,7 +73,7 @@ alpha_textsize = theme(axis.title = element_text(size = 15),
                        axis.text.x = element_text(size = 13, angle = 90, vjust = 0.5),
                        legend.position = "none")
 
-##set colorblind friendly palette
+## Set colorblind friendly palette
 cbpalette <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00","#F781BF", "#A65628" )
 
 ## Load custom function for plotting alpha diversities
