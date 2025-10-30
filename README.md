@@ -4,7 +4,7 @@ This directory contains microbiome analysis data and scripts for the hepatic nan
 
 ## Directory Structure
 ```
-/microbiome_analyses
+
 ├── 16Sv4
 │   ├── data
 │   ├── scripts
