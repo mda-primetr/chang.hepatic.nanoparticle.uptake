@@ -2,7 +2,7 @@ library(phyloseq)
 library(dplyr)
 
 # Load data as phyloseq object
-physeq <- readRDS("data/physeq_rarefied.rds")
+physeq <- readRDS("data/processed_data/physeq_rarefied.rds")
 
 
 # Generate top taxa plot
