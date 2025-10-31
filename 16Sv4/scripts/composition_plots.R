@@ -2,7 +2,7 @@
 library(dplyr)
 library(phyloseq)
 library(microViz)
-physeq <- readRDS("data/physeq_rarefied.RDS") 
+physeq <- readRDS("data/processed_data/physeq_rarefied.RDS") 
 
 # Create composition plot
 library(ggplot2)

@@ -2,7 +2,7 @@
 library(dplyr)
 library(phyloseq)
 
-physeq <- readRDS("data/physeq_rarefied.RDS") 
+physeq <- readRDS("data/processed_data/physeq_rarefied.RDS") 
 
 # Extract metadata
 metadata <- physeq %>%
