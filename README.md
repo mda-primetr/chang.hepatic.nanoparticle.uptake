@@ -31,7 +31,7 @@ Each folder may contain:
 
 ## Usage
 1. Open the corresponding R project (`.Rproj`) in RStudio.
-2. Load relevant data from the `data/` folder.
+2. Load relevant data from the `data/` folder. Start with create_phyloseq.r if you would like to recreate phyloseq object. This is not required for other script files.
 3. Run analysis scripts from the `scripts/` directory.
 4. Process and visualize microbiome data accordingly.
 
