@@ -7,6 +7,8 @@ physeq <- readRDS("data/processed_data/physeq_rarefied.RDS")
 # Create composition plot
 library(ggplot2)
 library(stringr)
+
+# Save phyloseq object as 
 top_taxa_plot <- physeq%>%
   comp_barplot(tax_level = "Genus",
                taxon_renamer = function(x) str_replace_all(x, c( "_" = " ")),
@@ -22,5 +24,4 @@ top_taxa_plot <- physeq%>%
 
 # View plot
 top_taxa_plot
-
 
