@@ -49,7 +49,7 @@ adonis_annot <- paste("Adonis2 test: treatment * timepoint R2 =", formatC(adonis
 
 # Save pcoa_df data
 write.csv(pcoa_df,
-          "data/figure_data/plot_4i_4j_data.csv",
+          "data/figure_data/figure_4i_4j_data.csv",
           row.names = FALSE)
 
 

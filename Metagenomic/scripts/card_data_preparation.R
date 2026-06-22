@@ -103,7 +103,7 @@ stats_mapping <- reads_summary %>%
 
 # Save data for plot
 write.csv(reads_summary, 
-          "data/figure_data/si_figure_23a_data",
+          "data/figure_data/si_figure_23_a_data.csv",
           row.names = FALSE)
 
 

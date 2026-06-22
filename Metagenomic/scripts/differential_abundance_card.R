@@ -250,7 +250,7 @@ volc_mechanism
 walk(treatments, function(tx) {
   maaslin_results_drug_class %>%
     filter(treatment == tx) %>%
-    write.csv(paste0("data/figure_data/SI_figure_23_b_", tx, "_data.csv"),
+    write.csv(paste0("data/figure_data/si_figure_23_b_", tx, "_data.csv"),
               row.names = FALSE)
 })
 
@@ -258,7 +258,7 @@ walk(treatments, function(tx) {
 walk(treatments, function(tx) {
   maaslin_results_gene_clean %>%
     filter(treatment == tx) %>%
-    write.csv(paste0("data/figure_data/SI_figure_23_c_", tx, "_data.csv"),
+    write.csv(paste0("data/figure_data/si_figure_23_c_", tx, "_data.csv"),
               row.names = FALSE)
 })
 
@@ -266,6 +266,6 @@ walk(treatments, function(tx) {
 walk(treatments, function(tx) {
   maaslin_results_mechanism %>%
     filter(treatment == tx) %>%
-    write.csv(paste0("data/figure_data/SI_figure_23_d_", tx, "_data.csv"),
+    write.csv(paste0("data/figure_data/si_figure_23_d_", tx, "_data.csv"),
               row.names = FALSE)
 })
