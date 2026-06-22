@@ -11,6 +11,15 @@ library(stringr)
 # Save phyloseq object as figure_1I data
 saveRDS(physeq,
         "data/figure_data/figure_1l_data.rds")
+
+# Melt data to save as .csv 
+physeq_melted <- physeq %>%
+  ps_melt()
+
+# Save this as .csv
+write.csv(physeq_melted,
+          "data/figure_data/figure_1l_data.csv",
+          row.names = FALSE)
 top_taxa_plot <- physeq%>%
   comp_barplot(tax_level = "Genus",
                taxon_renamer = function(x) str_replace_all(x, c( "_" = " ")),
