@@ -1,6 +1,7 @@
 library(phyloseq)
 library(dplyr)
 
+
 # Load data as phyloseq object
 physeq <- readRDS("data/processed_data/physeq_rarefied.rds")
 
@@ -9,6 +10,7 @@ metadata <- physeq %>%
   sample_data() %>%
   data.frame()
 
+library(tibble)
 #Calculate alpha diversities
 alpha <- estimate_richness(physeq, measures = c("Observed", "InvSimpson", "Shannon"))%>%
   rownames_to_column("sample")%>%
@@ -57,15 +59,21 @@ shan_anova <- Anova(shan_lm)
 
 
 
-## Create data frame with test statistics for plot labels
+## Create data frames with test statistics for plot tables
 
-alpha_annot_df <- data.frame(metric = c("Richness", "InvSimpson", "Shannon"),
-                             label = c(paste0("Interaction Chisq = ", formatC(rich_anova$`Chisq`[3], digits = 3),
-                                              " p = ", formatC(rich_anova$`Pr(>Chisq)`[3], digits = 3)),
-                                       paste0("Interaction Chisq = ", formatC(simp_anova$`LR Chisq`[3], digits = 3),
-                                              " p = ", formatC(simp_anova$`Pr(>Chisq)`[3], digits = 3)),
-                                       paste0("Interaction Chisq = ", formatC(shan_anova$`Chisq`[3], digits = 3),
-                                              " p = ", formatC(shan_anova$`Pr(>Chisq)`[3], digits = 3))))
+rich_anova_df <- rich_anova %>%
+  data.frame() %>%
+  mutate(across(where(is.numeric),  ~ formatC(.x, digits = 3)))
+
+simp_anova_df <- simp_anova %>%
+  data.frame() %>%
+  mutate(across(where(is.numeric),  ~ formatC(.x, digits = 3)))
+
+shan_anova_df <- shan_anova %>%
+  data.frame() %>%
+  mutate(across(where(is.numeric),  ~ formatC(.x, digits = 3)))
+
+
 
 ## Create data frames of estimated marginal means for each metric
 library(emmeans)
@@ -83,6 +91,7 @@ shan_means <- emmeans(shan_lm, pairwise ~ treatment * timepoint, type = "respons
 
 # Plots ----
 ## Create object of font sizes for plots
+library(ggplot2)
 alpha_textsize =   theme(axis.text.y = element_text(size = 14),
                          axis.title = element_text(size = 16),
                          axis.text.x = element_text(size = 12, angle = 45, hjust = 0.5, vjust = 0.5),
@@ -92,6 +101,11 @@ alpha_textsize =   theme(axis.text.y = element_text(size = 14),
 
 # Set colorblind friendly palette
 treat_pal <-   c( '#737373', '#EE6677',  '#4477AA', '#AA3377')
+
+# Save plot data
+write.csv(alpha,
+          "data/figure_data/figure_4f_4g_4h_data.csv",
+          row.names = FALSE)
 ##Create plots
 
 rich_plot <- alpha %>%
@@ -147,6 +161,18 @@ shan_plot <- alpha %>%
 
 
 # Print plots and anova tables
-rich_plot
-simp_plot
-shan_plot
+ggarrange(rich_plot,
+          ggtexttable(rich_anova_df),
+          ncol = 1,
+          heights = c(2, 1)
+          )
+ggarrange(simp_plot,
+          ggtexttable(simp_anova_df),
+          ncol = 1,
+          heights = c(2, 1)
+)
+ggarrange(shan_plot,
+          ggtexttable(shan_anova_df),
+          ncol = 1,
+          heights = c(2, 1)
+)
