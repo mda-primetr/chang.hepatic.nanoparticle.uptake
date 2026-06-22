@@ -47,6 +47,10 @@ adonis_annot <- paste("Adonis2 test: R2 =", formatC(adonis_out$R2[1], digits = 2
 ##set colorblind friendly palette for plot 
 cbpalette <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00","#F781BF", "#A65628" )
 
+# Save pcoa plot data as .csv
+write.csv(pcoa_df,
+          "data/figure_data/figure_1j_data.csv",
+          row.names = FALSE)
 # Create plot 
 pcoa_plot <- pcoa_df%>%
   mutate(treat = factor(treat, 
@@ -125,6 +129,10 @@ dist_means <- emmeans(dist_lm, "treat") %>%
   data.frame() %>%
   rename(distance = emmean)
 
+# Save dissimilarities data as .csv
+write.csv(dist_df,
+          "data/figure_data/figure_1k_data.csv",
+          row.names = FALSE)
 
 ## Dissimilarities plot ----
 dist_plot <- dist_df %>%
