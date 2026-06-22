@@ -47,8 +47,16 @@ adonis_annot <- paste("Adonis2 test: treatment * timepoint R2 =", formatC(adonis
 
 #PCOA plots ----
 
+# Save pcoa_df data
+write.csv(pcoa_df,
+          "data/figure_data/plot_4i_4j_data.csv",
+          row.names = FALSE)
+
+
 # Set colorblind friendly palette
 treat_pal <-   c( '#737373', '#EE6677',  '#4477AA', '#AA3377')
+
+
 ##  Create plot with ellipses ----
 pcoa_ellipse <- pcoa_df%>%
   ggplot(aes(axis_1, axis_2, color = treatment, shape = timepoint, fill = treatment, group = timepoint)) +
@@ -152,6 +160,12 @@ dist_time_annot <- paste0("Chisq = ", formatC(dist_time_stat$statistic, digits =
 
 ### Plot----
 
+# Save distance time plot data
+write.csv(dist_time_df,
+          "data/figure_data/figure_4k_data.csv",
+          row.names = FALSE)
+
+
 dist_time_plot <- dist_time_df %>%
   ggplot(aes(x = treatment, y = distance, color = treatment)) +
   geom_boxplot() +
@@ -210,6 +224,12 @@ dist_treat_means <- emmeans(dist_treat_lm, pairwise ~ treatment + timepoint, typ
   rename(distance = response)
 
 ### Generate plot
+
+# Save treatment distance plot
+write.csv(dist_treat_df,
+          "data/figure_data/figure_4l_data.csv",
+          row.names = FALSE)
+
 
 dist_treat_plot <- dist_treat_df %>%
   ggplot(aes(x = timepoint, y = distance, color = treatment, shape = timepoint)) +

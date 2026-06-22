@@ -28,6 +28,7 @@ cbpalette <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00","#F781BF", 
 #For loop to run differential abundance analyses comparing each treatment to control and create plots
 library(ANCOMBC)
 library(forcats)
+library(ggrepel)
 
 for(trt in levels(metadata$treat)[2:length(levels(metadata$treat))]) {
   
@@ -97,6 +98,20 @@ for(trt in levels(metadata$treat)[2:length(levels(metadata$treat))]) {
   ancombc_res_list[[trt]] <- assign(paste0("ancombc_res_", trt), ancombc_res_df)
 }
 
+# Save data files
+for(trt in levels(metadata$treat)[2:length(levels(metadata$treat))]) {
+ 
+  # Extract appropriate data frame from list
+  df <- ancombc_res_list[[trt]]
+  
+  # Set filename
+  filename <- paste0("data/figure_data/ext_data_fig2_", trt, "_data.csv")
+  # save
+  write.csv(df,
+            filename,
+            row.names = FALSE)
+   
+}
 
 # Add genus labels to plots
 library(ggrepel)

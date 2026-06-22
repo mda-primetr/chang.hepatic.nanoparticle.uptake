@@ -21,7 +21,10 @@ tax <- biom$taxonomy %>%
 # Load metadata and transform for phyloseq creation
 
 metadata <- read.csv("data/metadata/16sv4_metadata.csv") %>%
-  mutate(rownames = sample) %>% # Duplicate sample column to set sample values as row names while preserving the column
+  mutate(
+    treat = factor(treat, 
+                   levels = c("Untreated", "Colistin", "Gentamycin", "Kanamycin", "Metronidazole", "Vancomycin", "All")),
+    rownames = sample) %>% # Duplicate sample column to set sample values as row names while preserving the column
   column_to_rownames("rownames") %>%
   sample_data()
 
