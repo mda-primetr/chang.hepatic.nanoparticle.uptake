@@ -8,7 +8,9 @@ physeq <- readRDS("data/processed_data/physeq_rarefied.RDS")
 library(ggplot2)
 library(stringr)
 
-# Save phyloseq object as 
+# Save phyloseq object as figure_1I data
+saveRDS(physeq,
+        "data/figure_data/figure_1I_data.rds")
 top_taxa_plot <- physeq%>%
   comp_barplot(tax_level = "Genus",
                taxon_renamer = function(x) str_replace_all(x, c( "_" = " ")),

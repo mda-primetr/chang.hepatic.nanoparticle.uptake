@@ -14,7 +14,8 @@ library(tibble)
 tax <- biom$taxonomy %>%
   data.frame() %>%
   column_to_rownames(".otu") %>%
-  as.matrix()
+  as.matrix() %>%
+  tax_table()
 
 # Extract 
 # Load metadata and transform for phyloseq creation
@@ -34,7 +35,7 @@ physeq_unrarefied <- phyloseq(feature_table,
                               phylogeny)
 
 # Rarefy phyloseq object to sample with fewest counts
-physeq_rarefied <- rarefy_even_depth(physeq)
+physeq_rarefied <- rarefy_even_depth(physeq_unrarefied, rngseed = 9281)
 
 
 # Save phyloseq object
