@@ -1,0 +1,3 @@
+feature	metadata	value	coef	stderr	N	N.not.0	pval	qval
+Mef.En2.	timepoint	after	2.54507240451948	0.638415129190309	12	9	0.00257360343125589	0.0257360343125589
+Bifidobacterium.bifidum.ileS.conferring.resistance.to.mupirocin	timepoint	after	1.37633486341844	0.442436718817156	12	8	0.0110455077009909	0.0552275385049544

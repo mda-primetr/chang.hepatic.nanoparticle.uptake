@@ -1,4 +1,4 @@
-source("src/libraries.r")
+library(dplyr)
 
 # Load CARD data frame
 rgi_df <- read.csv("data/processed_data/rgi_data_clean.csv") %>%
@@ -7,13 +7,8 @@ rgi_df <- read.csv("data/processed_data/rgi_data_clean.csv") %>%
                             levels = c("before", "after"))) %>%
   arrange(mouse, timepoint)
 
-# Load card phyloseq object
-physeq_card <- readRDS("data/processed_data/physeq_card.rds")
-
-# Extract card classification
-card_classes <- physeq_card %>%
-  tax_table() %>%
-  data.frame()
+library(tibble)
+library(tidyr)
 # Prepare input — MaAsLin2 needs samples as rows, features as columns
 maaslin_input <- rgi_df %>%
   dplyr::select(sample, aro_term, tpm) %>%
@@ -28,7 +23,9 @@ maaslin_meta <- rgi_df %>%
 
 
 # Gene level ----
-
+library(purrr)
+library(Maaslin2)
+library(readr)
 # Run maaslin comparing before vs after within each treatment
 treatments <- unique(maaslin_meta$treatment)
 
@@ -43,7 +40,7 @@ maaslin_results_gene <- map_dfr(treatments, function(tx) {
   fit <- Maaslin2(
     input_data     = data_sub,
     input_metadata = meta_sub,
-    output         = paste0("output/maaslin/card/gene/", tx),
+    output         = paste0("data/maaslin/card/gene/", tx),
     fixed_effects  = "timepoint",
     random_effects = "mouse",
     normalization  = "NONE",
@@ -53,14 +50,15 @@ maaslin_results_gene <- map_dfr(treatments, function(tx) {
   )
   
   # Read results and add treatment label
-  read_tsv(paste0("output/maaslin/card/gene/", tx, "/all_results.tsv"),
+  read_tsv(paste0("data/maaslin/card/gene/", tx, "/all_results.tsv"),
            show_col_types = FALSE) %>%
     mutate(treatment = tx)
 })
 
-
+library(stringr)
 # Create lookup table
-name_lookup <- card_classes %>%
+name_lookup <- rgi_df %>%
+  distinct(aro_term, amr_gene_family, drug_class, resistance_mechanism) %>%
   dplyr::select(aro_term, amr_gene_family, drug_class, resistance_mechanism) %>%
   mutate(aro_term_clean = make.names(aro_term) %>% str_remove("^X")) %>%
   as_tibble()
@@ -75,7 +73,7 @@ maaslin_results_gene_clean <- maaslin_results_gene %>%
 # Save this
 write.csv(maaslin_results_gene_clean %>%
             arrange(qval),
-          "output/maaslin/card/gene/maaslin_results_gene.csv"
+          "data/maaslin/card/gene/maaslin_results_gene.csv"
           )
 
 
@@ -96,7 +94,7 @@ maaslin_results_drug_class <- map_dfr(treatments, function(tx) {
   fit <- Maaslin2(
     input_data     = data_sub,
     input_metadata = meta_sub,
-    output         = paste0("output/maaslin/card/drug_class/", tx),
+    output         = paste0("data/maaslin/card/drug_class/", tx),
     fixed_effects  = "timepoint",
     random_effects = "mouse",
     normalization  = "NONE",
@@ -104,7 +102,7 @@ maaslin_results_drug_class <- map_dfr(treatments, function(tx) {
     min_prevalence = 0.1,
     reference      = "timepoint,before"
   ) 
-  read_tsv(paste0("output/maaslin/card/drug_class/", tx, "/all_results.tsv"),
+  read_tsv(paste0("data/maaslin/card/drug_class/", tx, "/all_results.tsv"),
            show_col_types = FALSE) %>%
     mutate(treatment = tx)
 }) %>%
@@ -117,7 +115,7 @@ maaslin_results_drug_class <- map_dfr(treatments, function(tx) {
 # Save this
 write.csv(maaslin_results_drug_class %>%
             arrange(qval),
-          "output/maaslin/card/drug_class/maaslin_results_drug_class.csv"
+          "data/maaslin/card/drug_class/maaslin_results_drug_class.csv"
 )
 
 
@@ -137,7 +135,7 @@ maaslin_results_mechanism <- map_dfr(treatments, function(tx) {
   fit <- Maaslin2(
     input_data     = data_sub,
     input_metadata = meta_sub,
-    output         = paste0("output/maaslin/card/resistance_mechanism/", tx),
+    output         = paste0("data/maaslin/card/resistance_mechanism/", tx),
     fixed_effects  = "timepoint",
     random_effects = "mouse",
     normalization  = "NONE",
@@ -145,7 +143,7 @@ maaslin_results_mechanism <- map_dfr(treatments, function(tx) {
     min_prevalence = 0.1,
     reference      = "timepoint,before"
   )
-  read_tsv(paste0("output/maaslin/card/resistance_mechanism/", tx, "/all_results.tsv"),
+  read_tsv(paste0("data/maaslin/card/resistance_mechanism/", tx, "/all_results.tsv"),
            show_col_types = FALSE) %>%
     mutate(treatment = tx)
 }) %>%
@@ -158,7 +156,7 @@ maaslin_results_mechanism <- map_dfr(treatments, function(tx) {
 # Save this
 write.csv(maaslin_results_mechanism%>%
             arrange(qval),
-          "output/maaslin/card/resistance_mechanism/maaslin_results_resistance_mechanism.csv"
+          "data/maaslin/card/resistance_mechanism/maaslin_results_resistance_mechanism.csv"
 )
 
 
@@ -211,6 +209,10 @@ make_volcano <- function(data, feature_col, title) {
     ggtitle(title)
 }
 
+library(ggplot2)
+library(ggrepel)
+# Define color palette for time
+time_pal <- c("after" = "#E69F00", "before" = "#009E73", "ns" = "grey70")
 # Gene level plots — use gene_label instead of aro_term
 volc_gene <- maaslin_results_gene_clean %>%
   prep_volcano(feature_col = "aro_term", label_col = "gene_label") %>%
@@ -241,35 +243,29 @@ volc_mechanism <- maaslin_results_mechanism %>%
 volc_mechanism
 
 
+# Save the data objects for each figure
 
-# Create directories
-dir.create("output/figures/card/differential_abundance/gene", recursive = TRUE)
-dir.create("output/figures/card/differential_abundance/drug_class", recursive = TRUE)
-dir.create("output/figures/card/differential_abundance/resistance_mechanism", recursive = TRUE)
 
-# Save gene level plots
+# Drug class — SI figure 23b
 walk(treatments, function(tx) {
-  ggsave(
-    filename = paste0("output/figures/card/differential_abundance/gene/volc_gene_", tx, ".pdf"),
-    plot = volc_gene[[tx]],
-    width = 8, height = 6, dpi = 400
-  )
+  maaslin_results_drug_class %>%
+    filter(treatment == tx) %>%
+    write.csv(paste0("data/figure_data/SI_figure_23_b_", tx, "_data.csv"),
+              row.names = FALSE)
 })
 
-# Save drug class level plots
+# AMR genes — SI figure 23c
 walk(treatments, function(tx) {
-  ggsave(
-    filename = paste0("output/figures/card/differential_abundance/drug_class/volc_drug_class_", tx, ".pdf"),
-    plot = volc_drug_class[[tx]],
-    width = 8, height = 6, dpi = 400
-  )
+  maaslin_results_gene_clean %>%
+    filter(treatment == tx) %>%
+    write.csv(paste0("data/figure_data/SI_figure_23_c_", tx, "_data.csv"),
+              row.names = FALSE)
 })
 
-# Save resistance mechanism level plots
+# Resistance mechanism — SI figure 23d
 walk(treatments, function(tx) {
-  ggsave(
-    filename = paste0("output/figures/card/differential_abundance/resistance_mechanism/volc_mechanism_", tx, ".pdf"),
-    plot = volc_mechanism[[tx]],
-    width = 8, height = 6, dpi = 400
-  )
+  maaslin_results_mechanism %>%
+    filter(treatment == tx) %>%
+    write.csv(paste0("data/figure_data/SI_figure_23_d_", tx, "_data.csv"),
+              row.names = FALSE)
 })

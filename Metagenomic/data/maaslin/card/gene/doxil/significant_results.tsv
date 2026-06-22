@@ -1,0 +1,3 @@
+feature	metadata	value	coef	stderr	N	N.not.0	pval	qval
+Bifidobacterium.adolescentis.rpoB.mutants.conferring.resistance.to.rifampicin	timepoint	after	1.71800482367485	0.631830035495837	12	7	0.0215939089744211	0.139348301820866
+tet.Q.	timepoint	after	-0.505228369405638	0.160313450760309	12	12	0.0253360548765212	0.139348301820866
