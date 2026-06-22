@@ -16,7 +16,10 @@ alpha <- estimate_richness(physeq, measures = c("Observed", "InvSimpson", "Shann
   rename(Richness = "Observed") %>%
   right_join(metadata, by = "sample")
 
-
+# Save plot data
+write.csv(alpha,
+          "data/figure_data/figure_1i_data.csv",
+          row.names = FALSE)
 
 
 # Analyses ----
