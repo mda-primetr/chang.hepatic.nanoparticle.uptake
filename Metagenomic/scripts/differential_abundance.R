@@ -23,6 +23,7 @@ ancombc_res_list <- list()
 ##For loop to run differential abundance analysis comparing each treatment to control
 library(ANCOMBC)
 library(forcats)
+library(ggrepel)
 for(trt in levels(metadata$treatment)) {
   
   #Filter physeq_glom to just include control and selected treatments
@@ -100,36 +101,49 @@ for(trt in levels(metadata$treatment)) {
 
 ## Add labels
 
-volc_list$control <- volc_list$control +
-  geom_text_repel(point.size = 2, 
-                  max.overlaps = Inf, 
-                  show.legend = F,
-                  segment.alpha = 0.5,
-                  point.size = 3,
-                  force = 50,
-                  min.segment.length = 2)
+# volc_list$control <- volc_list$control +
+#   geom_text_repel(point.size = 2, 
+#                   max.overlaps = Inf, 
+#                   show.legend = F,
+#                   segment.alpha = 0.5,
+#                   point.size = 3,
+#                   force = 50,
+#                   min.segment.length = 2)
+# 
+# volc_list$doxil <- volc_list$doxil +
+#   geom_text_repel(point.size = 2, 
+#                   force = 60, 
+#                   show.legend = F,
+#                   segment.alpha = 0.5,
+#                   nudge_y = -0.1) +
+#   ylim(-20, 105)
+# 
+# volc_list$metro <- volc_list$metro +
+#   geom_text_repel(show.legend = F,
+#                   segment.alpha = 0.5)
+# 
+# volc_list$'metro+doxil' <- volc_list$`metro+doxil` +
+#   geom_text_repel(point.size = 2, 
+#                   show.legend = F,
+#                   segment.alpha = 0.5) +
+#   ylim(-0.5, 3) +
+#   xlim(-7, 15)
 
-volc_list$doxil <- volc_list$doxil +
-  geom_text_repel(point.size = 2, 
-                  force = 60, 
-                  show.legend = F,
-                  segment.alpha = 0.5,
-                  nudge_y = -0.1) +
-  ylim(-20, 105)
 
-volc_list$metro <- volc_list$metro +
-  geom_text_repel(show.legend = F,
-                  segment.alpha = 0.5)
-
-volc_list$'metro+doxil' <- volc_list$`metro+doxil` +
-  geom_text_repel(point.size = 2, 
-                  show.legend = F,
-                  segment.alpha = 0.5) +
-  ylim(-0.5, 3) +
-  xlim(-7, 15)
-
-
-
+# Save data files
+for(trt in levels(metadata$treatment)) {
+  
+  # Extract appropriate data frame from list
+  df <- ancombc_res_list[[trt]]
+  
+  # Set filename
+  filename <- paste0("data/figure_data/ext_data_fig10_", trt, "_data.csv")
+  # save
+  write.csv(df,
+            filename,
+            row.names = FALSE)
+  
+}
 ## Add species labels to plots
 library(ggrepel)
 volc_list$control <- volc_list$control +
